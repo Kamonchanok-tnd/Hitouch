@@ -124,6 +124,11 @@ func CreateMember(c *gin.Context) {
 	// เข้ารหัสรหัสผ่าน
 	hashedPassword, _ := config.HashPassword(member.Password)
 
+	// ตรวจสอบและกำหนดค่า Role
+	if member.Role == "" {
+		member.Role = "user" // ตั้งค่า Role เป็น "user" ถ้าไม่ถูกส่งมา
+	}
+
 	// สร้างข้อมูลสมาชิกใหม่
 	u := entity.Member{
 		UserName:  member.UserName,
@@ -144,6 +149,7 @@ func CreateMember(c *gin.Context) {
 	// ส่งข้อมูลการสร้างสำเร็จกลับไปยัง client
 	c.JSON(http.StatusCreated, gin.H{"message": "Created success", "data": u})
 }
+
 
 // GET /Member/:id
 func GetMember(c *gin.Context) {
